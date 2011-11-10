@@ -1,9 +1,9 @@
 ############ REAME pyADCP ###############
-pyADCP is python a library in order to manage ADCP (RDI Workhorse) data stored in mysql
+pyADCP is a python library in order to manage ADCP (RDI Workhorse) data stored in mysql
 
 #Files:
 - libADCP.py
-  contains all function to get data from mysql and do some operations.
+  contains all functions to get data from mysql and do some operations.
 
 #TODO
 - A nice documentation
