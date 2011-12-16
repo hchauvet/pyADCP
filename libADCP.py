@@ -22,7 +22,7 @@
 ##############################################################################
 #MYSQL CONFIGURATION
 DBuser='adcp_user'
-DBpasswd='+adcp-mysql'
+DBpasswd='********'
 DBserv='localhost'
 DBname='BaseADCP'
 ####################################################
