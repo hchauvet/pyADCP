@@ -3,7 +3,7 @@
 #
 #       libADCP.py
 #       
-#       Copyright 2009 hugo chauvet <chauvet@ipgp.jussieu.fr>
+#       Copyright 2009 hugo chauvet <chauvet[at]ipgp.jussieu[dot]fr>
 #       
 #       This program is free software; you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by
