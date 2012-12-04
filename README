@@ -1,16 +1,16 @@
-============
-REAME pyADCP
-============
+README pyADCP
+=============
 
 pyADCP is a python library in order to manage ADCP (RDI Workhorse) data stored in mysql
 
 Files:
-======
+------
+
 - libADCP.py
   contains all functions to get data from mysql and do some operations.
 
 Documentation:
-==============
+--------------
 
   https://morpho.ipgp.fr/docs/pyADCP/
 
