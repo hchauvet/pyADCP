@@ -1,0 +1,402 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tutorial &#8212; pyADCP a documentation</title>
+    
+    <link rel="stylesheet" href="static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Installation" href="Install.html" />
+   
+  <link rel="stylesheet" href="static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pyADCP</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=hchauvet&repo=pyADCP&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#import-new-data-from-winriver-to-mysql">Import new data From WinRiver to MySQL</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#winriver-ascii-output">WinRiver ASCII output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#import-using-a-terminal">Import using a Terminal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#import-using-python">Import using python</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#transect-or-time-serie">Transect or time serie</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#get-started-in-3-steps">Get Started (In 3 steps)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#export-adcp-data">Export ADCP data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#export-gps-locations">Export GPS locations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compute-discharge">Compute discharge</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Install.html" title="previous chapter">Installation</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="import-new-data-from-winriver-to-mysql">
+<h2>Import new data From WinRiver to MySQL<a class="headerlink" href="#import-new-data-from-winriver-to-mysql" title="Permalink to this headline">¶</a></h2>
+<p>To import data from WinRiver (I or II) to mysql, you can use 2 methods. The first one is a pure python which uses the python WinRiver ascii file parser from  <em>libImportADCP.py</em>. The second uses a terminal interface, <em>Importer.py</em>, that allows to load huge amount of measurement files contained in folders.</p>
+<div class="section" id="winriver-ascii-output">
+<h3>WinRiver ASCII output<a class="headerlink" href="#winriver-ascii-output" title="Permalink to this headline">¶</a></h3>
+<p>The ascii parser, is build to decode CLASSICAL ASCII output produced by WinRiver. The database is built to store each velocity computation mode (when they are available i.e. when a GPS is connected to the ADCP). You have to export a classical ASCII output for each reference modes (a BT file for bottom track, and if a GPS is plugged: a GGA file and a VTG file).</p>
+<ol class="arabic simple">
+<li>Open a measurement in WinRiver and select reference mode <strong>BT</strong>.</li>
+<li>Turn classical ASCII output on.</li>
+<li>Reprocess your transect.</li>
+</ol>
+<p>Then move the created ASCII file to a new folder (I called it BT). And re-start this operation for GPS references GGA and VTG. Don&#8217;t forget to move files in different folders, otherwise WinRiver recover the previous ASCII file. If you have a lot of measurements the terminal Importer script need to have for on measurement the <strong>same file name for each mode</strong> in different folders. Typically folder names could be BT / GGA / VTG.</p>
+</div>
+<div class="section" id="import-using-a-terminal">
+<h3>Import using a Terminal<a class="headerlink" href="#import-using-a-terminal" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">First you need to edit the file Importer.py (with a simple text editor) to change the path where libImporterADCP.py is located (line 25):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">l</span> <span class="mi">25</span><span class="p">]</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;/path/to/libImporter&#39;</span><span class="p">)</span>
+
+<span class="n">Change</span> <span class="n">this</span> <span class="n">line</span> <span class="n">using</span> <span class="n">your</span> <span class="n">path</span> <span class="n">where</span> <span class="n">you</span> <span class="n">install</span> <span class="n">libImporterADCP</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create a comment file, where your data are located (below is a suggested path tree):</p>
+<ul class="simple">
+<li>\Data<ul>
+<li>\BT<ul>
+<li>measure_000_ASC.TXT</li>
+<li>measure_001_ASC.TXT</li>
+<li>...</li>
+</ul>
+</li>
+<li>\GGA<ul>
+<li>measure_000_ASC.TXT</li>
+<li>measure_001_ASC.TXT</li>
+<li>...</li>
+</ul>
+</li>
+<li>\VTG<ul>
+<li>measure_000_ASC.TXT</li>
+<li>measure_001_ASC.TXT</li>
+<li>...</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Under linux (Mac also) open a terminal and go where Data folder is located and use <strong>ls</strong> command to create the file comment.txt by listing files in one subfolder for example BT:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ls</span> <span class="o">./</span><span class="n">BT</span> <span class="o">&gt;</span> <span class="n">comment</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>The file comment.txt should look like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">measure_000_ASC</span><span class="o">.</span><span class="n">TXT</span>
+<span class="n">measure_001_ASC</span><span class="o">.</span><span class="n">TXT</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>Now you have to add comment in front of each file names using &#8220;|&#8221; character as separator:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">measure_000_ASC</span><span class="o">.</span><span class="n">TXT</span><span class="o">|</span><span class="n">My</span> <span class="n">comment</span> <span class="n">on</span> <span class="n">measurement</span> <span class="n">number</span> <span class="mi">1</span>
+<span class="n">measure_001_ASC</span><span class="o">.</span><span class="n">TXT</span><span class="o">|</span><span class="n">My</span> <span class="n">comment</span> <span class="n">on</span> <span class="n">measurement</span> <span class="n">number</span> <span class="mi">2</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>Your comment file is now ready !</p>
+</li>
+<li><p class="first">Open a terminal, go to the folder where your data is located and type:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">Importer</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">rivername</span> <span class="n">your_river_name</span> <span class="o">-</span><span class="n">dbt</span> <span class="o">./</span><span class="n">BT</span> <span class="o">-</span><span class="n">dvtg</span> <span class="o">./</span><span class="n">VTG</span> <span class="o">-</span><span class="n">dgga</span> <span class="o">./</span><span class="n">GGA</span> <span class="o">-</span><span class="n">dcom</span> <span class="o">./</span><span class="n">comment</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">user</span> <span class="n">ADCP</span> <span class="o">-</span><span class="k">pass</span> <span class="n">ADCP</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>The description of all options is available in help:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">Importer</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">h</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="import-using-python">
+<h3>Import using python<a class="headerlink" href="#import-using-python" title="Permalink to this headline">¶</a></h3>
+<p>If you want to import a single file (just reference BT) or if you want to build your own importer you can use directly libImportADCP.py in a python script.</p>
+<ul>
+<li><p class="first">Here is an example to import file measure_0_000_BT.TXT with <strong>BT</strong> reference:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#Specify the location of libImportADCP.py</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;/path/to/libImportADCP&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">libImportADCP</span> <span class="k">as</span> <span class="nn">importer</span>
+
+<span class="c1">#Init the importer class named AdcpToSql</span>
+<span class="c1">#AdcpToSql(</span>
+<span class="c1">#       usa=Mysql username [default: &#39;root&#39;]</span>
+<span class="c1">#       pasa=Mysql userpass [default: &#39;&#39;]</span>
+<span class="c1">#       serva=Mysql server address [default: &#39;localhost&#39;]</span>
+<span class="c1">#       basa=Mysql database name [default: &#39;BaseADCP&#39;]</span>
+<span class="c1">#       mode=reference mode [default: &#39;BT&#39;]</span>
+
+<span class="n">import_bt</span> <span class="o">=</span> <span class="n">importer</span><span class="o">.</span><span class="n">AdcpToSql</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;BT&#39;</span><span class="p">,</span><span class="n">usa</span><span class="o">=</span><span class="s1">&#39;ADCP&#39;</span><span class="p">,</span><span class="n">pasa</span><span class="o">=</span><span class="s1">&#39;ADCP&#39;</span><span class="p">,</span><span class="n">serva</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span><span class="n">basa</span><span class="o">=</span><span class="s1">&#39;BaseADCP&#39;</span><span class="p">)</span>
+
+<span class="c1">#Get the new id for your file from mysql (this check profcode and return max+1)</span>
+<span class="n">import_bt</span><span class="o">.</span><span class="n">getnids</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The mysql id for this measurement is </span><span class="si">%i</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">import_bt</span><span class="o">.</span><span class="n">nid</span><span class="p">)</span>
+
+<span class="c1">#Add the path of the file</span>
+<span class="n">import_bt</span><span class="o">.</span><span class="n">NameIn</span><span class="p">(</span><span class="s1">&#39;/path/to/measure_0_000_BT.TXT&#39;</span><span class="p">)</span>
+
+<span class="c1">#Add the path and name of sql output file that will be created by the parser</span>
+<span class="n">import_bt</span><span class="o">.</span><span class="n">NameOut</span><span class="p">(</span><span class="s1">&#39;/path/to/output.sql&#39;</span><span class="p">)</span>
+
+<span class="c1">#Add river name</span>
+<span class="n">import_bt</span><span class="o">.</span><span class="n">rivername</span><span class="p">(</span><span class="s1">&#39;Your river name&#39;</span><span class="p">)</span>
+
+<span class="c1">#Add a comment</span>
+<span class="n">import_bt</span><span class="o">.</span><span class="n">comment</span><span class="p">(</span><span class="s1">&#39;Your comment on this measurement&#39;</span><span class="p">)</span>
+
+<span class="c1">#Parse the Input file -&gt; this create Nameout file containing sql sentences with data</span>
+<span class="n">import_bt</span><span class="o">.</span><span class="n">parsADCP</span><span class="p">()</span>
+
+<span class="c1">#Upload this file to mysql</span>
+<span class="n">import_bt</span><span class="o">.</span><span class="n">sourceADCP</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>A more synthetic way:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#Specify the location of libImportADCP.py</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;/home/hugo/developpement/python/adcp/lib&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">libImportADCP</span> <span class="k">as</span> <span class="nn">importer</span>
+
+<span class="c1">#Give all informations at class initialisation</span>
+<span class="n">import_bt</span> <span class="o">=</span> <span class="n">importer</span><span class="o">.</span><span class="n">AdcpToSql</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;BT&#39;</span><span class="p">,</span><span class="n">nema</span><span class="o">=</span><span class="s1">&#39;/pat/to/measure_0_000_BT.TXT&#39;</span><span class="p">,</span><span class="n">nemb</span><span class="o">=</span><span class="s1">&#39;/path/to/output.sql&#39;</span><span class="p">,</span> <span class="n">rena</span><span class="o">=</span><span class="s1">&#39;your river name&#39;</span><span class="p">,</span> <span class="n">coma</span><span class="o">=</span><span class="s1">&#39;your comment on this measurement&#39;</span><span class="p">,</span> <span class="n">usa</span><span class="o">=</span><span class="s1">&#39;ADCP&#39;</span><span class="p">,</span><span class="n">pasa</span><span class="o">=</span><span class="s1">&#39;ADCP&#39;</span><span class="p">,</span><span class="n">serva</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span><span class="n">basa</span><span class="o">=</span><span class="s1">&#39;BaseADCP&#39;</span><span class="p">)</span>
+
+<span class="c1">#parse</span>
+<span class="n">import_bt</span><span class="o">.</span><span class="n">parsADCP</span><span class="p">()</span>
+<span class="c1">#source to mysql</span>
+<span class="n">import_bt</span><span class="o">.</span><span class="n">sourceADCP</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">For <strong>GGA</strong> or <strong>VTG</strong> file you need to link the id (Profcode in EnsembleInfo table) to the parent BT measurement id (from the code above, the id can be obtain from <strong>import_bt.nid</strong>). This will upload correctly the 2 associated profiles (VTG and GGA) and you don&#8217;t need to specify river name and comment again. Here is an example for a <strong>GGA file</strong> and a <strong>VTG file</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#YOU have to import libImportADCP see example below</span>
+
+
+<span class="c1">#### GGA file ####</span>
+<span class="c1">#Don&#39;t forget to set the mode to &#39;GGA&#39;</span>
+<span class="n">import_gga</span> <span class="o">=</span> <span class="n">importer</span><span class="o">.</span><span class="n">AdcpToSql</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;GGA&#39;</span><span class="p">,</span><span class="n">nema</span><span class="o">=</span><span class="s1">&#39;/pat/to/measure_0_000_GGA.TXT&#39;</span><span class="p">,</span><span class="n">nemb</span><span class="o">=</span><span class="s1">&#39;/path/to/output.sql&#39;</span><span class="p">)</span>
+
+<span class="c1">#Set the parentid (i.e. ProfCode of BT record already presents in MySQL)</span>
+<span class="c1">#To Get it you can use libADCP to list rivers present in database</span>
+<span class="c1">#from libADCP import River</span>
+<span class="c1">#idriver = River(usa=&#39;ADCP&#39;, pasa=&#39;ADCP&#39;)</span>
+
+<span class="c1">#or use mysql command &quot;SELECT Profcode, rivername, comment FROM ProfileInfo&quot;</span>
+
+<span class="c1">#here supose BT data have profcode=12</span>
+<span class="n">import_gga</span><span class="o">.</span><span class="n">Idparent</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="c1">#you can also specify this id in AdcpToSql with argument parent=12</span>
+<span class="c1">#parse and upload</span>
+<span class="n">import_gga</span><span class="o">.</span><span class="n">parsADCP</span><span class="p">()</span>
+<span class="n">import_gga</span><span class="o">.</span><span class="n">sourceADCP</span><span class="p">()</span>
+
+<span class="c1">#### VTG file #####</span>
+<span class="c1">#Don&#39;t forget to set the mode to &#39;VTG&#39; and parent to the same measurement BT profcode (here for the example 12)</span>
+<span class="n">import_vtg</span> <span class="o">=</span> <span class="n">importer</span><span class="o">.</span><span class="n">AdcpToSql</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;VTG&#39;</span><span class="p">,</span><span class="n">perent</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span><span class="n">nema</span><span class="o">=</span><span class="s1">&#39;/pat/to/measure_0_000_VTG.TXT&#39;</span><span class="p">,</span><span class="n">nemb</span><span class="o">=</span><span class="s1">&#39;/path/to/output.sql&#39;</span><span class="p">)</span>
+<span class="c1">#Parse and source</span>
+<span class="n">import_vrg</span><span class="o">.</span><span class="n">parsADCP</span><span class="p">()</span>
+<span class="n">import_vtg</span><span class="o">.</span><span class="n">sourceADCP</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="transect-or-time-serie">
+<h2>Transect or time serie<a class="headerlink" href="#transect-or-time-serie" title="Permalink to this headline">¶</a></h2>
+<p>The River class allows to work with single transect or time series (fix location) data.</p>
+<div class="section" id="get-started-in-3-steps">
+<h3>Get Started (In 3 steps)<a class="headerlink" href="#get-started-in-3-steps" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">Some useful import (update path to folder where libADCP.py is located):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#Add path to library</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;/home/your/folder/to/libADCP/&#39;</span><span class="p">)</span>
+
+<span class="c1">#yes pylab for do scientific stuff with python</span>
+<span class="kn">from</span> <span class="nn">pylab</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="c1">#import classes from libADCP</span>
+<span class="kn">from</span> <span class="nn">libADCP</span> <span class="k">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">To begin you need to initialize the River class.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">riverid</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1">#Id of river in mysql database (correspond to cols Profcode from ProfileInfo table)</span>
+<span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;BT&#39;</span> <span class="c1">#Measurement reference mode BT : bottom track</span>
+<span class="n">dbuser</span><span class="o">=</span><span class="s1">&#39;ADCP&#39;</span> <span class="c1">#mysql user</span>
+<span class="n">dbpass</span><span class="o">=</span><span class="s1">&#39;TOTO&#39;</span> <span class="c1">#mysql user password</span>
+
+<span class="c1">#Init the River class</span>
+<span class="n">trav</span> <span class="o">=</span> <span class="n">River</span><span class="p">(</span><span class="n">riverid</span><span class="p">,</span><span class="n">mode</span><span class="p">,</span><span class="n">usa</span><span class="o">=</span><span class="n">dbuser</span><span class="p">,</span><span class="n">pasa</span><span class="o">=</span><span class="n">dbpass</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Now the most useful thing... Retrieve data from mysql and store them in a python dictionary:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#The method GetDatas allow to retrieve selected data from mysql</span>
+<span class="n">trav</span><span class="o">.</span><span class="n">GetData</span><span class="p">(</span><span class="s1">&#39;VM,TDMG,VD&#39;</span><span class="p">)</span>
+
+<span class="c1">#The velocity magnitude VM is now stored in</span>
+<span class="n">trav</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;VM&#39;</span><span class="p">]</span>
+
+<span class="c1">#check the shape</span>
+<span class="n">shape</span><span class="p">(</span><span class="n">trav</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;VM&#39;</span><span class="p">])</span> <span class="c1">#Wow it&#39;s a 2D array</span>
+
+<span class="c1">#Idem for Travel meet good TDMG and velocity direction VD</span>
+<span class="n">trav</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;TDMG&#39;</span><span class="p">]</span>
+<span class="n">trav</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;VD&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="export-adcp-data">
+<h3>Export ADCP data<a class="headerlink" href="#export-adcp-data" title="Permalink to this headline">¶</a></h3>
+<p>To export ADCP data of a given profile in a specific folder.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">libADCP</span> <span class="kn">as</span> <span class="nn">ADCP</span>
+
+<span class="n">mes</span> <span class="o">=</span> <span class="n">adcp</span><span class="o">.</span><span class="n">River</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;BT&#39;</span><span class="p">,</span> <span class="n">usa</span><span class="o">=</span><span class="s1">&#39;ADCP&#39;</span><span class="p">,</span> <span class="n">pasa</span><span class="o">=</span><span class="s1">&#39;ADCP&#39;</span><span class="p">)</span>
+<span class="n">mes</span><span class="o">.</span><span class="n">GetData</span><span class="p">(</span><span class="s1">&#39;DEPTH, VM, TDNG, LAT, lON&#39;</span><span class="p">)</span>
+
+<span class="n">mes</span><span class="o">.</span><span class="n">Export</span><span class="p">(</span><span class="s1">&#39;./path/to/output/directory&#39;</span><span class="p">,</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="export-gps-locations">
+<h3>Export GPS locations<a class="headerlink" href="#export-gps-locations" title="Permalink to this headline">¶</a></h3>
+<p>If you use a GPS with your ADCP during measurements you can export GPS position to KML format or simple text file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#YOU NEED TO IMPORT lON and LAT data</span>
+<span class="n">trav</span><span class="o">.</span><span class="n">GetData</span><span class="p">(</span><span class="s1">&#39;lON,LAT&#39;</span><span class="p">)</span>
+
+<span class="c1">#Export as KML</span>
+<span class="n">trav</span><span class="o">.</span><span class="n">ExportPosition</span><span class="p">(</span><span class="s1">&#39;./test.kml&#39;</span><span class="p">,</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;kml&#39;</span><span class="p">)</span>
+
+<span class="c1">#As a text file</span>
+<span class="n">trav</span><span class="o">.</span><span class="n">ExportPosition</span><span class="p">(</span><span class="s1">&#39;./test.asc&#39;</span><span class="p">,</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;txt&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="compute-discharge">
+<h3>Compute discharge<a class="headerlink" href="#compute-discharge" title="Permalink to this headline">¶</a></h3>
+<p>To compute the discharge:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#You need to create a River object</span>
+<span class="n">riverid</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1">#Id of river in mysql database (correspond to cols Profcode from ProfileInfo table)</span>
+<span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;BT&#39;</span> <span class="c1">#Measurement reference mode BT : bottom track</span>
+<span class="n">dbuser</span><span class="o">=</span><span class="s1">&#39;ADCP&#39;</span> <span class="c1">#mysql user</span>
+<span class="n">dbpass</span><span class="o">=</span><span class="s1">&#39;TOTO&#39;</span> <span class="c1">#mysql user password</span>
+
+<span class="n">riv</span> <span class="o">=</span> <span class="n">River</span><span class="p">(</span><span class="n">riverid</span><span class="p">,</span><span class="n">mode</span><span class="p">,</span><span class="n">usa</span><span class="o">=</span><span class="n">dbuser</span><span class="p">,</span><span class="n">pasa</span><span class="o">=</span><span class="n">dbpass</span><span class="p">)</span>
+
+<span class="c1">#Then you can simply use print to display usefull informations</span>
+
+<span class="nb">print</span> <span class="n">riv</span>
+
+<span class="c1">#Or you can get the discharge with the Dicharge method</span>
+
+<span class="n">Q</span><span class="p">,</span> <span class="n">Sec</span><span class="p">,</span> <span class="n">Vel</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">H</span> <span class="o">=</span> <span class="n">riv</span><span class="o">.</span><span class="n">Discharge</span><span class="p">()</span>
+
+<span class="c1">#Datas computed using riv.Discharge() are also stored in self.datas</span>
+<span class="n">riv</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Discharge&#39;</span><span class="p">]</span>
+<span class="n">riv</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Section areea&#39;</span><span class="p">]</span>
+<span class="n">riv</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Mean velocity&#39;</span><span class="p">]</span>
+<span class="n">riv</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Width&#39;</span><span class="p">]</span>
+<span class="n">riv</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Mean depth&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Hugo Chauvet.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="sources/Tutorial.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

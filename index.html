@@ -26,6 +26,7 @@
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="Install.html" />
    
   <link rel="stylesheet" href="static/custom.css" type="text/css" />
   
@@ -34,16 +35,122 @@
 
   </head>
   <body role="document">
-  
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">pyADCP</a></h1>
 
-    <div class="document">
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=hchauvet&repo=pyADCP&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial.html">Tutorial</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="Install.html" title="next chapter">Installation</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
           <div class="body" role="main">
             
   <div class="section" id="welcome-to-pyadcp-s-documentation">
 <h1>Welcome to pyADCP&#8217;s documentation!<a class="headerlink" href="#welcome-to-pyadcp-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>pyADCP is a set of classes to deal with large amount of ADCP data stored in MySQL database.</p>
+<ul class="simple">
+<li>Contact: chauvet[att]ipgp[ddot]fr</li>
+<li>Licence: GPL. This is a free software, feel free to modify and submit improvements.</li>
+</ul>
+<p>Different python files are involved in this project:</p>
+<ul>
+<li><p class="first"><em>libADCP.py</em> the core library containing the following classes.</p>
+<ol class="arabic">
+<li><p class="first">River class</p>
+<p>The main class that contains functions to get data from MySQL and many useful functions to process data.</p>
+</li>
+<li><p class="first">Section class</p>
+<p>A class to deal with many fix measurements in a cross-section. The aim is to load many measurements (many River class) and work on all of them.</p>
+</li>
+<li><p class="first">Threader class</p>
+<p>To make request uses multi-threading (used by Section class)</p>
+</li>
+<li><p class="first">Adcp_Sql_Parser</p>
+<p>To create grouped SQL request to improve speed.</p>
+</li>
+</ol>
+</li>
+<li><p class="first"><em>libImportADCP.py</em> the library to read generic ASCII files from WinRiver and parse them to a sql file</p>
+</li>
+<li><p class="first"><em>Importer.py</em> terminal interface to <em>libImportADCP</em> for importing WinRIVER ASCII files to MySQL.</p>
+</li>
+</ul>
+<div class="section" id="a-quick-example">
+<h2>A quick example<a class="headerlink" href="#a-quick-example" title="Permalink to this headline">¶</a></h2>
+<p>With localhost database and user = ADCP and password = ADCP.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1">#Add path to library</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;/path/to/libADCP&#39;</span><span class="p">)</span>
+
+<span class="c1">#import libraries</span>
+<span class="kn">from</span> <span class="nn">pylab</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">libADCP</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Create a new object river for measurement id number 10 with data reference mode BT = Bottom Track</span>
+<span class="n">river</span> <span class="o">=</span> <span class="n">River</span><span class="p">(</span><span class="n">idriverin</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;BT&#39;</span><span class="p">,</span><span class="n">usa</span><span class="o">=</span><span class="s1">&#39;ADCP&#39;</span><span class="p">,</span><span class="n">pasa</span><span class="o">=</span><span class="s1">&#39;ADCP&#39;</span><span class="p">)</span>
+
+<span class="c1">#Load Data</span>
+<span class="c1">#VM magnitude component</span>
+<span class="c1">#DEPTH depth of cells</span>
+<span class="c1">#TDMG travel meet good</span>
+<span class="n">river</span><span class="o">.</span><span class="n">GetDatas</span><span class="p">(</span><span class="s1">&#39;VM,DEPTH,TDMG&#39;</span><span class="p">)</span>
+
+<span class="c1">#Plot</span>
+<span class="n">pcolormesh</span><span class="p">(</span><span class="n">river</span><span class="o">.</span><span class="n">datas</span><span class="p">[</span><span class="s1">&#39;TDMG&#39;</span><span class="p">],</span><span class="o">-</span><span class="n">river</span><span class="o">.</span><span class="n">datas</span><span class="p">[</span><span class="s1">&#39;DEPTH&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span><span class="n">river</span><span class="o">.</span><span class="n">datas</span><span class="p">[</span><span class="s1">&#39;VM&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">10</span><span class="o">**-</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1">#Add bottom to the plot</span>
+<span class="n">river</span><span class="o">.</span><span class="n">AddBottom</span><span class="p">(</span><span class="n">river</span><span class="o">.</span><span class="n">datas</span><span class="p">[</span><span class="s1">&#39;TDMG&#39;</span><span class="p">],</span><span class="n">gca</span><span class="p">())</span>
+
+<span class="c1">#set limites</span>
+<span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">40</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">river</span><span class="o">.</span><span class="n">datas</span><span class="p">[</span><span class="s1">&#39;TDMG&#39;</span><span class="p">]),</span><span class="nb">max</span><span class="p">(</span><span class="n">river</span><span class="o">.</span><span class="n">datas</span><span class="p">[</span><span class="s1">&#39;TDMG&#39;</span><span class="p">]))</span>
+
+<span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="images/quick_exemple.png" src="images/quick_exemple.png" />
 <div class="toctree-wrapper compound">
+</div>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
@@ -59,41 +166,8 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="#">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Welcome to pyADCP&#8217;s documentation!</a></li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
-</ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="#">Documentation overview</a><ul>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="sources/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2017, Hugo Chauvet.
       
