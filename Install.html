@@ -58,7 +58,20 @@
 
 <h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirement">Requirement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#downloads">Downloads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mysql-setup">MySQL setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#database-structure">Database Structure</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#adcpdata-structure">ADCPData Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ensembleinfo-structure">EnsembleInfo Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#profileinfo-structure">ProfileInfo Structure</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="Tutorial.html">Tutorial</a></li>
 </ul>
 
@@ -89,6 +102,537 @@
             
   <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>pyADCP woks on the python 2.x branch.</p>
+<div class="section" id="requirement">
+<h2>Requirement<a class="headerlink" href="#requirement" title="Permalink to this headline">¶</a></h2>
+<p>pyADCP requires several python libraries:</p>
+<ul class="simple">
+<li>pylab</li>
+<li>numpy</li>
+<li>matplotlib</li>
+<li>MySQLdb</li>
+</ul>
+<p>To install these libraries, you can use the powerful tool python pip (a repository with easy instal procedure) <a class="reference external" href="http://pypi.python.org/pypi/pip">Python pip</a>.</p>
+<p>It also require MySQL server (see MySQL setup section).</p>
+<p>On Linux all these are common packages, and can be easily installed via package managers.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">On windows you can install python Anaconda distribution that
+contain a lot of python libraries (pylab, numpy, matplotlib,
+etc...) <a class="reference external" href="http://code.google.com/p/python/">Anaconda (use the 2.X branch)</a>.</p>
+</div>
+</div>
+<div class="section" id="downloads">
+<h2>Downloads<a class="headerlink" href="#downloads" title="Permalink to this headline">¶</a></h2>
+<p>Go to the <a class="reference external" href="thelinktogithub">pyADCP github page</a> and download the
+repository. This repository contains:</p>
+<ul class="simple">
+<li><strong>BaseADCP.sql</strong>, The BaseADCP schema of the MySQL database to
+create them.</li>
+<li><strong>libADCP.py</strong>, the main library to work with ADCP data stored in MySQL.</li>
+<li><strong>libImportADCP.py</strong>, manage how to convert WinRIVER ascii data to
+sql and import them to a MySQL database.</li>
+<li><strong>Importer.py</strong>, a terminal interface to import large data-sets.</li>
+</ul>
+</div>
+<div class="section" id="mysql-setup">
+<h2>MySQL setup<a class="headerlink" href="#mysql-setup" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">You need to install MySQL server on your computer.</p>
+<ul class="simple">
+<li>Install guide :<ul>
+<li><a class="reference external" href="http://doc.ubuntu-fr.org/mysql">Ubuntu</a></li>
+<li><a class="reference external" href="http://dev.mysql.com/doc/refman/5.0/en/installing.html">Generic Linux/Mac/Windows</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p class="first">In a terminal launch mysql (or run mysql terminal on windows) and
+connect with the root account:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mysql</span> <span class="o">-</span><span class="n">uroot</span> <span class="o">-</span><span class="n">p</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create a database named BaseADCP and exit mysql.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">create</span> <span class="n">database</span> <span class="n">BaseADCP</span><span class="p">;</span>
+<span class="n">exit</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Import the structure of BaseADCP located in the file
+<strong>BaseADCP.sql</strong>.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mysql</span> <span class="o">-</span><span class="n">uroot</span> <span class="o">-</span><span class="n">pyourpass</span> <span class="n">BaseADCP</span> <span class="o">&lt;</span> <span class="n">BaseADCP</span><span class="o">.</span><span class="n">sql</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>Your done with the installation of the MySQL database you can now
+import data following <a class="reference external" href="/tutorial#import">this tutorial</a></p>
+<div class="section" id="database-structure">
+<h3>Database Structure<a class="headerlink" href="#database-structure" title="Permalink to this headline">¶</a></h3>
+<img alt="images/BaseADCP.jpg" src="images/BaseADCP.jpg" />
+<div class="section" id="adcpdata-structure">
+<h4>ADCPData Structure<a class="headerlink" href="#adcpdata-structure" title="Permalink to this headline">¶</a></h4>
+<p>This table contains information relative to 4-Beams measurements link to EnsembleInfo by <strong>Ensemblecode</strong>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="43%" />
+<col width="23%" />
+<col width="13%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Colonne</th>
+<th class="head">Type</th>
+<th class="head">Null</th>
+<th class="head">Défaut</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>//<strong>Dcode</strong>//</td>
+<td>int(11)</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>Ensemblecode</td>
+<td>int(11)</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>DEPTH</td>
+<td>float</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>VM</td>
+<td>float</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>VD</td>
+<td>float</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>EVC</td>
+<td>float</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>NVC</td>
+<td>float</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>VVC</td>
+<td>float</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>ERRV</td>
+<td>float</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>BCKSB1</td>
+<td>float</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>BCKSB2</td>
+<td>float</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>BCKSB3</td>
+<td>float</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>BCKSB4</td>
+<td>float</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>PG</td>
+<td>float</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>Q</td>
+<td>float</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ensembleinfo-structure">
+<h4>EnsembleInfo Structure<a class="headerlink" href="#ensembleinfo-structure" title="Permalink to this headline">¶</a></h4>
+<p>This table contains information relative to one Ensemble of measurements link to
+the table ProfileInfo by <strong>Profcode</strong>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="25%" />
+<col width="10%" />
+<col width="15%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Colonne</td>
+<td>Type</td>
+<td>Null</td>
+<td>Défaut</td>
+</tr>
+<tr class="row-even"><td>Profcode</td>
+<td>int(11)</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>//<strong>Ensemblecode</strong>//</td>
+<td>int(11)</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>ETYear</td>
+<td>int(11)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>ETMonth</td>
+<td>int(11)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>ETDay</td>
+<td>int(11)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>ETHour</td>
+<td>int(11)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>ETMin</td>
+<td>int(11)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>ETSec</td>
+<td>int(11)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>ETHund</td>
+<td>int(11)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>ENum</td>
+<td>int(11)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>NES</td>
+<td>int(11)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>PITCH</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>ROLL</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>CORRHEAD</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>ADCPTemp</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>BTVelE</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>BTVelN</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>BTVelUp</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>BTVelErr</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>CBD</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>GGAA</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>GGAD</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>GGAHDOP</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>DB1</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>DB2</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>DB3</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>DB4</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>TED</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>TET</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>TDTN</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>TDTE</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>TDMG</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>LAT</td>
+<td>double</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>lON</td>
+<td>double</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>NDInv</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>NDfnvu</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>NDfnvu2</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>DVMP</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>DVTP</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>DVBP</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>DVSSDE</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>DVSD</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>DVESDE</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>DVED</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>SDML</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>SDBL</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>NBINS</td>
+<td>int(11)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>MU</td>
+<td>varchar(2)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>VR</td>
+<td>varchar(3)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>IU</td>
+<td>varchar(6)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>ISF</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>SAF</td>
+<td>float</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="profileinfo-structure">
+<h4>ProfileInfo Structure<a class="headerlink" href="#profileinfo-structure" title="Permalink to this headline">¶</a></h4>
+<p>This table contains information relative to one measurement.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="43%" />
+<col width="30%" />
+<col width="11%" />
+<col width="16%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Colonne</td>
+<td>Type</td>
+<td>Null</td>
+<td>Défaut</td>
+</tr>
+<tr class="row-even"><td>//<strong>Profcode</strong>//</td>
+<td>int(11)</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>rivername</td>
+<td>varchar(55)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>DCL</td>
+<td>int(11)</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>BAT</td>
+<td>int(11)</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>DFCF</td>
+<td>int(11)</td>
+<td>Non</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>NDC</td>
+<td>int(11)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>NPPE</td>
+<td>int(11)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>TPE</td>
+<td>int(11)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>PM</td>
+<td>int(11)</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>comment</td>
+<td>blob</td>
+<td>Oui</td>
+<td>NULL</td>
+</tr>
+<tr class="row-even"><td>Type</td>
+<td>int(11)</td>
+<td>Non</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>GGAcode</td>
+<td>int(11)</td>
+<td>Non</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>VTGcode</td>
+<td>int(11)</td>
+<td>Non</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 </div>
 
 
