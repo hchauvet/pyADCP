@@ -22,12 +22,12 @@ On Linux all these are common packages, and can be easily installed via package 
 .. note:: 
    On windows you can install python Anaconda distribution that
    contain a lot of python libraries (pylab, numpy, matplotlib,
-   etc...) `Anaconda (use the 2.X branch) <http://code.google.com/p/python/>`_.
+   etc...) `Anaconda (use the 2.X branch) <https://www.continuum.io/downloads>`_.
 
 Downloads
 ---------
 
-Go to the `pyADCP github page <the link to github>`_ and download the
+Go to the `pyADCP github page <https://github.com/hchauvet/pyADCP>`_ and download the
 repository. This repository contains:
 
 * **BaseADCP.sql**, The BaseADCP schema of the MySQL database to
@@ -69,7 +69,7 @@ MySQL setup
 	mysql -uroot -pyourpass BaseADCP < BaseADCP.sql
 
 Your done with the installation of the MySQL database you can now
-import data following `this tutorial </tutorial#import>`_
+import data following `this tutorial <Tutorial.html#import>`_
 
 Database Structure 
 ******************
