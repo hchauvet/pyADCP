@@ -69,7 +69,7 @@ MySQL setup
 	mysql -uroot -pyourpass BaseADCP < BaseADCP.sql
 
 Your done with the installation of the MySQL database you can now
-import data following `this tutorial <Tutorial.html#import>`_
+import data following `this tutorial <Tutorial.html#import-new-data-from-winriver-to-mysql>`_
 
 Database Structure 
 ******************
