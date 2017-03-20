@@ -1,0 +1,23 @@
+# README pyADCP
+
+pyADCP is a python library to manage and process ADCP (RDI Workhorse) data stored in mysql. 
+
+# Documentation:
+
+
+https://hchauvet.github.io/pyADCP/
+
+
+# Files:
+
+- **BaseADCP.sql**, The BaseADCP schema of the MySQL database to
+  create them.
+
+- **libADCP.py**, the main library to work with ADCP data stored in MySQL.
+
+- **libImportADCP.py**, manage how to convert WinRIVER ascii data to
+  sql and import them to a MySQL database.
+
+- **Importer.py**, a terminal interface to import large data-sets. 
+
+
